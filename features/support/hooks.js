@@ -1,10 +1,13 @@
 let { driver } = require('./get_driver')
 let {BeforeAll,Before,After,AfterAll,setDefaultTimeout} = require('cucumber')
 let path = require('path')
+let cuketest = require('cuketest');
 
 setDefaultTimeout(60*1000)
 
 BeforeAll(async function(){
+    await cuketest.minimize()
+
     let desiredCaps = {
         platformName: "iOS",
         platformVersion: "11.4",
@@ -25,6 +28,7 @@ After(async function(){
 })
 
 
-AfterAll(function(){
+AfterAll(async function(){
+    await cuketest.restore();
     return driver.quit();
 })

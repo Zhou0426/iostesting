@@ -76,18 +76,30 @@ Then(/^首页最后一个列表文本值应该为"([^"]*)"$/, async function (te
     return assert.equal(text,textval);
 });
 
-Given(/^获取首页的文本值$/, async function () {
+
+
+Given(/^点击Edit按钮转换为可编辑状态$/, async function () {
+
+    await driver.elementByAccessibilityId('Edit').click();
+});
+
+When(/^选择最后一个列表$/, async function () {
 
     let itemlist = await driver.elementsByIosClassChain('**/XCUIElementTypeTable/**/XCUIElementTypeCell')
 
     let last = itemlist.length - 1;
+    let del = await itemlist[last].elementByXPath('//XCUIElementTypeButton[5]')
+    await del.click();
+});
 
-    let element =  await itemlist[2].elementByIosClassChain('**/XCUIElementTypeStaticText') 
-    // console.log("element",element)
-    let text = await element.text();
-    console.log("text===",text)
+When(/^点击删除$/, async function () {
 
+    await driver.elementByXPath('(//XCUIElementTypeButton[@name="Delete"])[1]').click();
+});
 
-    let id = await driver.elementByAccessibilityId('Pasta with Meatballs').text()
-    console.log("id===",id)
+Then(/^此列表应该被删掉$/, async function () {
+    let itemlist = await driver.elementsByIosClassChain('**/XCUIElementTypeTable/**/XCUIElementTypeCell')
+    
+    return assert.ok(itemlist.length == 3)
+    
 });
